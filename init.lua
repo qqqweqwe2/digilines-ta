@@ -44,6 +44,7 @@ dofile(modpath .. "/util.lua")
 dofile(modpath .. "/internal.lua")
 dofile(modpath .. "/wires_common.lua")
 dofile(modpath .. "/wire_std.lua")
+dofile(modpath.."/touchscreen.lua")
 
 function digilines.receptor_send(pos, rules, channel, msg)
 	local checked = {}
