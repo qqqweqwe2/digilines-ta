@@ -61,3 +61,12 @@ minetest.register_node("digilines:lightsensor", {
 		end
 	end,
 })
+
+minetest.register_craft({
+	output = "digilines:lightsensor 1",
+	recipe = {
+		{"default:glass", "mesecons:wire_00000000_off", "mesecons_luacontroller:luacontroller0000"},
+		{"", "default:torch", ""},
+		{"", "", ""}
+	}
+})
