@@ -407,7 +407,7 @@ minetest.register_node("digilines:locked_chest", {
 		can_insert = function(pos, _, stack, direction)
 			local ret = minetest.get_meta(pos):get_inventory():room_for_item("main", stack)
 			if not ret then
-				-- The stack cannot be accepted. It will never be passed to
+				-- The stack cannot be accepted. It will never  be passed to
 				-- insert_object, but it should be reported as a toverflow.
 				-- Here, direction = direction item is moving, which is into
 				-- side.
@@ -428,6 +428,7 @@ minetest.register_node("digilines:locked_chest", {
 			-- Walk the inventory, adding items to existing stacks of the same
 			-- type.
 			if inv_contents == nil then minetest.set_node(pos, {name = "air"}) return end
+			if inv_contents ~= nil then
 			for i = 1, #inv_contents do
 				local existing_stack = inv_contents[i]
 				if not existing_stack:is_empty() and existing_stack:get_name() == stack_name then
@@ -455,6 +456,7 @@ minetest.register_node("digilines:locked_chest", {
 						end
 					end
 				end
+			end
 			end
 			if stack_count ~= 0 then
 				-- Walk the inventory, adding items to empty slots.
