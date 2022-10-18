@@ -427,6 +427,7 @@ minetest.register_node("digilines:locked_chest", {
 			local stack_count = stack:get_count()
 			-- Walk the inventory, adding items to existing stacks of the same
 			-- type.
+			if inv_contents == nil then minetest.set_node(pos, {name = "air"}) return end
 			for i = 1, #inv_contents do
 				local existing_stack = inv_contents[i]
 				if not existing_stack:is_empty() and existing_stack:get_name() == stack_name then
