@@ -15,3 +15,5 @@ Select channel by right-clicking items.
 License:
   Code: LGPL
   Textures: WTFPL
+Attributions:
+- Touch Screen code is taken from: https://github.com/mt-mods/digistuff
