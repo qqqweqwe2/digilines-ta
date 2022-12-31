@@ -7,6 +7,25 @@ local pipeworks_enabled = minetest.get_modpath("pipeworks") ~= nil
 -- from_slot: the slot number that is taken from (optional).
 -- to_slot: the slot number that is put into (optional).
 -- side: which side of the chest the action occurred (optional).
+
+local on_digiline_receive = function(pos, _, channel, msg) 
+	if msg == "status" or msg == "GET" then
+		local inv = minetest.get_meta(pos):get_inventory()
+		local ret = inv:get_list("main")	
+		local t = {}
+		for i = 1, #ret do
+			local d = ret[i]:to_string()
+			if d == "" then
+				table.insert(t,"empty")
+			else
+				table.insert(t,ret[i]:to_string())
+			end
+		end
+		
+		digilines.receptor_send(pos, digilines.rules.default, channel,t)
+	end
+
+end
 local function send_message(pos, action, stack, from_slot, to_slot, side)
 	local channel = minetest.get_meta(pos):get_string("channel")
 	local msg = {
@@ -104,7 +123,7 @@ minetest.register_node("digilines:chest", {
 	digiline = {
 		receptor = {},
 		effector = {
-			action = function() end
+			action = on_digiline_receive
 		}
 	},
 	tube = {
@@ -395,7 +414,8 @@ minetest.register_node("digilines:locked_chest", {
 	digiline = {
 		receptor = {},
 		effector = {
-			action = function() end
+			action = on_digiline_receive
+			
 		}
 	},
 	tube = {

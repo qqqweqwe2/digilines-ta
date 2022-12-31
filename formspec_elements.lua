@@ -115,19 +115,19 @@ local formspec_elements = {
 	image = {
 		"image[%s,%s;%s,%s;%s]",
 		{"X", "Y", "W", "H", "image"},
-		{"0", "0", "1", "1", "default_dirt.png"},
+		{"0", "0", "1", "1", "ui_blank_image.png"},
 		{num, num, num, num, str}
 	},
 	animated_image = {
 		"animated_image[%s,%s;%s,%s;%s;%s;%s;%s;%s]",
 		{"X", "Y", "W", "H", "name", "image", "frame_count", "frame_duration", "frame_start"},
-		{"0", "0", "1", "1", "animated_image", "default_lava_flowing_animated.png", "16", "200", "1"},
+		{"0", "0", "1", "1", "animated_image", "ui_blank_image.png", "16", "200", "1"},
 		{num, num, num, num, str, str, num, num, num}
 	},
 	item_image = {
 		"item_image[%s,%s;%s,%s;%s]",
 		{"X", "Y", "W", "H", "item_name"},
-		{"0", "0", "1", "1", "default:dirt_with_grass"},
+		{"0", "0", "1", "1", "ui_blank_image.png"},
 		{num, num, num, num, str}
 	},
 	bgcolor = {
