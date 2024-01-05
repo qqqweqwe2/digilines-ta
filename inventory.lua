@@ -56,6 +56,8 @@ local function check_full(pos, stack)
 	end
 end
 
+
+local digiline_chest_img = "^digiline_chest.png"
 local tubeconn = pipeworks_enabled and "^pipeworks_tube_connection_wooden.png" or ""
 local tubescan = pipeworks_enabled and function(pos) pipeworks.scan_for_tube_objects(pos) end or nil
 
@@ -75,12 +77,12 @@ minetest.register_alias("digilines_inventory:chest", "digilines:chest")
 minetest.register_node("digilines:chest", {
 	description = "Digiline Chest",
 	tiles = {
-		"default_chest_top.png"..tubeconn,
-		"default_chest_top.png"..tubeconn,
-		"default_chest_side.png"..tubeconn,
-		"default_chest_side.png"..tubeconn,
-		"default_chest_side.png"..tubeconn,
-		"default_chest_front.png",
+		"default_chest_top.png"..tubeconn..digiline_chest_img,
+		"default_chest_top.png"..tubeconn..digiline_chest_img,
+		"default_chest_side.png"..tubeconn..digiline_chest_img,
+		"default_chest_side.png"..tubeconn..digiline_chest_img,
+		"default_chest_side.png"..tubeconn..digiline_chest_img,
+		"default_chest_front.png"..digiline_chest_img,
 	},
 	paramtype2 = "facedir",
 	legacy_facedir_simple = true,
@@ -340,12 +342,12 @@ minetest.register_alias("digilines_inventory:locked_chest", "digilines:locked_ch
 minetest.register_node("digilines:locked_chest", {
 	description = "Digiline Locked Chest",
 	tiles = {
-		"default_chest_top.png"..tubeconn,
-		"default_chest_top.png"..tubeconn,
-		"default_chest_side.png"..tubeconn,
-		"default_chest_side.png"..tubeconn,
-		"default_chest_side.png"..tubeconn,
-		"default_chest_lock.png",
+		"default_chest_top.png"..tubeconn..digiline_chest_img,
+		"default_chest_top.png"..tubeconn..digiline_chest_img,
+		"default_chest_side.png"..tubeconn..digiline_chest_img,
+		"default_chest_side.png"..tubeconn..digiline_chest_img,
+		"default_chest_side.png"..tubeconn..digiline_chest_img,
+		"default_chest_lock.png"..digiline_chest_img,
 	},
 	paramtype2 = "facedir",
 	legacy_facedir_simple = true,
