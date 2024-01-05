@@ -10,7 +10,13 @@ local pipeworks_enabled = minetest.get_modpath("pipeworks") ~= nil
 -- to_slot: the slot number that is put into (optional).
 -- side: which side of the chest the action occurred (optional).
 
-local on_digiline_receive = function(pos, _, channel, msg) 
+local on_digiline_receive = function(pos, _, requestedChannel, msg)
+
+	local channel = minetest.get_meta(pos):get_string("channel")
+	if not channel or channel ~= requestedChannel then
+		return
+	end
+
 	if msg == "status" or msg == "GET" then
 		local inv = minetest.get_meta(pos):get_inventory()
 		local ret = inv:get_list("main")	
