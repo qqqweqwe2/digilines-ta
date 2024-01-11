@@ -1,3 +1,5 @@
+local S = digilines.S
+
 local GET_COMMAND = "GET"
 
 local rtc_nodebox =
@@ -26,16 +28,18 @@ end
 
 minetest.register_alias("digilines_rtc:rtc", "digilines:rtc")
 minetest.register_node("digilines:rtc", {
-	description = "Digiline Real Time Clock (RTC)",
+	description = S("Digiline Real Time Clock (RTC)"),
 	drawtype = "nodebox",
 	tiles = {"digilines_rtc.png"},
 
 	paramtype = "light",
 	paramtype2 = "facedir",
 	groups = {dig_immediate=2},
+	_mcl_blast_resistance = 1,
+	_mcl_hardness = 0.8,
 	selection_box = rtc_selbox,
 	node_box = rtc_nodebox,
-	digiline =
+	digilines =
 	{
 		receptor = {},
 		effector = {
@@ -49,11 +53,32 @@ minetest.register_node("digilines:rtc", {
 	on_receive_fields = function(pos, _, fields, sender)
 		local name = sender:get_player_name()
 		if minetest.is_protected(pos, name) and not minetest.check_player_privs(name, {protection_bypass=true}) then
-			minetest.record_protection_violation(pos, name)
 			return
 		end
 		if (fields.channel) then
 			minetest.get_meta(pos):set_string("channel", fields.channel)
 		end
 	end,
+})
+
+local steel_ingot = "default:steel_ingot"
+local mese_crystal = "default:mese_crystal_fragment"
+local dye_black = "dye:black"
+
+if digilines.mcl then
+	steel_ingot = "mcl_core:iron_ingot"
+	mese_crystal = "mesecons:redstone"
+end
+
+if minetest.get_modpath("mcl_dye") then
+	dye_black = "mcl_dye:black"
+end
+
+minetest.register_craft({
+	output = "digilines:rtc",
+	recipe = {
+		{"", dye_black, ""},
+		{steel_ingot, mese_crystal, steel_ingot},
+		{"", "digilines:wire_std_00000000", ""}
+	}
 })

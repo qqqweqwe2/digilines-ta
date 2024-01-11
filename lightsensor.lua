@@ -1,3 +1,5 @@
+local S = digilines.S
+
 local GET_COMMAND = "GET"
 
 local lsensor_nodebox =
@@ -31,15 +33,17 @@ end
 
 minetest.register_alias("digilines_lightsensor:lightsensor", "digilines:lightsensor")
 minetest.register_node("digilines:lightsensor", {
-	description = "Digiline Lightsensor",
+	description = S("Digiline Lightsensor"),
 	drawtype = "nodebox",
 	tiles = {"digilines_lightsensor.png"},
 
 	paramtype = "light",
 	groups = {dig_immediate=2},
+	_mcl_blast_resistance = 1,
+	_mcl_hardness = 0.8,
 	selection_box = lsensor_selbox,
 	node_box = lsensor_nodebox,
-	digiline =
+	digilines =
 	{
 		receptor = {},
 		effector = {
@@ -53,7 +57,6 @@ minetest.register_node("digilines:lightsensor", {
 	on_receive_fields = function(pos, _, fields, sender)
 		local name = sender:get_player_name()
 		if minetest.is_protected(pos, name) and not minetest.check_player_privs(name, {protection_bypass=true}) then
-			minetest.record_protection_violation(pos, name)
 			return
 		end
 		if (fields.channel) then
@@ -62,10 +65,18 @@ minetest.register_node("digilines:lightsensor", {
 	end,
 })
 
+local steel_ingot = "default:steel_ingot"
+local glass = "default:glass"
+
+if digilines.mcl then
+	steel_ingot = "mcl_core:iron_ingot"
+	glass = "mcl_core:glass"
+end
+
 minetest.register_craft({
-	output = "digilines:lightsensor 1",
+	output = "digilines:lightsensor",
 	recipe = {
-		{"default:glass", "mesecons:wire_00000000_off", "mesecons_luacontroller:luacontroller0000"},
+		{glass, "mesecons:wire_00000000_off", "mesecons_luacontroller:luacontroller0000"},
 		{"", "default:torch", ""},
 		{"", "", ""}
 	}
