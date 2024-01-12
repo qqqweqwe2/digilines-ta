@@ -74,6 +74,7 @@ if minetest.get_modpath("mcl_dye") then
 	dye_black = "mcl_dye:black"
 end
 
+if minetest.settings:get_bool("digilines_enable_rtc_craft", false) ~= false then
 minetest.register_craft({
 	output = "digilines:rtc",
 	recipe = {
@@ -82,3 +83,4 @@ minetest.register_craft({
 		{"", "digilines:wire_std_00000000", ""}
 	}
 })
+end
