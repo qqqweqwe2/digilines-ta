@@ -1,3 +1,7 @@
+Upstream project: https://github.com/minetest-mods/digilines/
+
+Fork commit: f781039f435db58618ba26ffc66a307ae0340e58
+
 Digilines
 ==========
 
