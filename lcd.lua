@@ -259,8 +259,8 @@ local on_digiline_receive = function(pos, _, channel, msg)
 	local setchan = meta:get_string("channel")
 	if setchan ~= channel then return end
 
-	meta:set_string("text", msg)
-	meta:set_string("infotext", msg)
+	meta:set_string("text", dump(msg,""))
+	meta:set_string("infotext", dump(msg,""))
 
 	if msg ~= "" then
 		prepare_writing(pos)
