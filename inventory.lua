@@ -97,7 +97,11 @@ local tube_insert_object = function(pos, _, original_stack, direction)
 	-- Here, direction = direction item is moving, which is into side.
 	local side = vector.multiply(direction, -1)
 	local inv = minetest.get_meta(pos):get_inventory()
-	local inv_contents = inv:get_list("main")
+    local inv_contents = inv:get_list("main")
+    if not inv_contents then
+        inv:set_list("main", {})
+		inv_contents = inv:get_list("main")
+	end
 	local any_put = false
 	local stack = original_stack
 	local stack_name = stack:get_name()
