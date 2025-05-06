@@ -85,6 +85,15 @@ minetest.register_craft({
 	}
 })
 
+minetest.register_craft({
+	output = 'digilines:wire_std_00000000 2',
+	recipe = {
+		{fiber, fiber, fiber},
+		{gold_ingot, gold_ingot, gold_ingot},
+		{fiber, fiber, fiber},
+	}
+})
+
 -- For minetest 0.4 support returned nil are also tested:  ~= false
 if minetest.settings:get_bool("digilines_enable_inventory", true) ~= false then
 	dofile(modpath .. "/inventory.lua")
