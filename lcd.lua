@@ -254,6 +254,36 @@ local spawn_entity = function(pos)
 	end
 end
 
+local function on_projector_digiline_receive(stack, msg)
+	local value
+	if type(msg) == "string" then
+		value = msg
+	else
+		value = dump(msg, "")
+	end
+
+	local meta = stack:get_meta()
+	meta:set_string("_itemframe_text", value)
+
+	return nil
+end
+
+local function make_projector_object_props(props, stack)
+	props.visual = "mesh"
+	props.mesh = "digilines_lcd.obj"
+	props._itemframe_default_scale = 1/2
+
+	local meta = stack:get_meta()
+	local text = meta:get_string("_itemframe_text")
+
+	props.textures = {
+		"lcd_anyside.png",
+		"lcd_anyside.png^[resize:100x100^" .. generate_texture(create_lines(text)),
+	}
+
+	return props
+end
+
 local on_digiline_receive = function(pos, _, channel, msg)
 	local meta = minetest.get_meta(pos)
 	local setchan = meta:get_string("channel")
@@ -329,6 +359,8 @@ minetest.register_node("digilines:lcd", {
 			action = on_digiline_receive
 		},
 	},
+	_itemframe_entity_props = make_projector_object_props,
+	_itemframe_digiline_proxy_handler = on_projector_digiline_receive,
 })
 
 minetest.register_lbm({
