@@ -263,7 +263,7 @@ local function on_projector_digiline_receive(stack, msg)
 	end
 
 	local meta = stack:get_meta()
-	meta:set_string("_itemframe_text", value)
+	meta:set_string("_itemframe_text", string.sub(value, 1, 100))
 
 	return nil
 end
@@ -295,6 +295,8 @@ local on_digiline_receive = function(pos, _, channel, msg)
 	else
 		value = dump(msg, "")
 	end
+
+	value = string.sub(value, 1, 100)
 
 	meta:set_string("text", value)
 	meta:set_string("infotext", value)
@@ -350,7 +352,7 @@ minetest.register_node("digilines:lcd", {
 			return
 		end
 		if (fields.channel) then
-			minetest.get_meta(pos):set_string("channel", fields.channel)
+			minetest.get_meta(pos):set_string("channel", string.sub(fields.channel, 1, 50))
 		end
 	end,
 	digilines = {
