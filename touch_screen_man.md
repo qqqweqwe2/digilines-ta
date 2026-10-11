@@ -72,6 +72,8 @@ digiline_send("touchscreen", {
 
 ## Supported formspec elements
 
+The touchscreen uses formspec version 6 (Minetest 5.6.0+).
+
 **Standard elements:**
 
 - `tooltip`
@@ -199,6 +201,28 @@ digiline_send("touchscreen", {
 })
 ```
 
+**`model`**
+
+```lua
+digiline_send("touchscreen", {
+	command = "add",
+	element = "model",
+	X = 0,
+	Y = 0,
+	W = 2,
+	H = 2,
+	name = "model",
+	mesh = "character.b3d",
+	textures = {"character.png"},
+	rotation_x = 0,
+	rotation_y = 0,
+	continuous = false,
+	mouse_control = true,
+	frame_start = 0,
+	frame_end = 0,
+	animation_speed = 0,
+})
+```
 
 **`item_image`**
 
