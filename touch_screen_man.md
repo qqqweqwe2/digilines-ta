@@ -199,6 +199,25 @@ digiline_send("touchscreen", {
 })
 ```
 
+**`model`**
+
+```lua
+digiline_send("touchscreen", {
+	command = "add",
+	element = "model",
+	X = 0,
+	Y = 0,
+	W = 2,
+	H = 2,
+	name = "model",
+	mesh = "character.b3d",
+	textures = "character.png",
+	rotation_x = 0,
+	rotation_y = 0,
+	continuous = false,
+	mouse_control = true,
+})
+```
 
 **`item_image`**
 
