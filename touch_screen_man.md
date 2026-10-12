@@ -72,6 +72,8 @@ digiline_send("touchscreen", {
 
 ## Supported formspec elements
 
+The touchscreen uses formspec version 6 (Minetest 5.6.0+).
+
 **Standard elements:**
 
 - `tooltip`
