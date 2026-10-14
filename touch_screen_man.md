@@ -3,6 +3,7 @@
 The touchscreen is designed to be a customizable interface for input and display, it allows creating a custom formspec using a series of digiline commands, usually from a Luacontroller.
 
 - [Commands](#commands)
+- [Combining commands](#combining-commands)
 - [Supported formspec elements](#supported-formspec-elements)
 - [Unsupported formspec elements](#unsupported-formspec-elements)
 - [Formspec element reference](#formspec-element-reference)
@@ -33,7 +34,7 @@ digiline_send("touchscreen", {
 })
 ```
 
-**`insert`** - Adds an element at a specific index.
+**`insert`** - Adds an element at a specific index. The index can be any positive number.
 
 ```lua
 digiline_send("touchscreen", {
@@ -53,11 +54,29 @@ digiline_send("touchscreen", {
 })
 ```
 
-**`remove`** - Removes an element.
+**`modify`** - Replaces specified values of an existing element.
+
+```lua
+digiline_send("touchscreen", {
+	command = "modify",
+	index = 1,
+})
+```
+
+**`remove`** - Removes an element, shifting elements to fill the space.
 
 ```lua
 digiline_send("touchscreen", {
 	command = "remove",
+	index = 1,
+})
+```
+
+**`delete`** - Removes an element without changing element indexes.
+
+```lua
+digiline_send("touchscreen", {
+	command = "delete",
 	index = 1,
 })
 ```
@@ -68,6 +87,20 @@ digiline_send("touchscreen", {
 digiline_send("touchscreen", {
 	command = "clear",
 })
+```
+
+## Combining commands
+
+To save sending multiple digiline messages, commands can be combined into one message by sending them inside a table, like so:
+
+```lua
+digiline_send("touchscreen", {
+	{command = "clear"},
+	{command = "set", width = 3, height = 2},
+	{command = "add", element = "label", X = 0.1, Y = 0.2, label = "Hello world!"},
+	{command = "add", element = "button_exit", Y = 1.3, label = "Hello LUA!"},
+})
+
 ```
 
 ## Supported formspec elements
@@ -124,6 +157,7 @@ These elements, for design or other reasons, are not supported by the touchscree
 - `formspec_version`
 - `position`
 - `anchor`
+- `padding`
 - `container`
 - `container_end`
 - `scroll_container`
@@ -136,7 +170,7 @@ These elements, for design or other reasons, are not supported by the touchscree
 
 ## Formspec element reference
 
-Example code for each of the supported formspec elements. For more details see the [Minetest Lua API](https://github.com/minetest/minetest/blob/master/doc/lua_api.txt).
+Example code for each of the supported formspec elements. For more details see the [Minetest Lua API](https://github.com/minetest/minetest/blob/master/doc/lua_api.md#elements).
 
 All values except `command` and `element` are optional, with default values being used when a value is nil or invalid.
 
@@ -180,6 +214,7 @@ digiline_send("touchscreen", {
 	W = 1,
 	H = 1,
 	image = "default_dirt.png",
+	middle = "",
 })
 ```
 
@@ -198,6 +233,7 @@ digiline_send("touchscreen", {
 	frame_count = 16,
 	frame_duration = 200,
 	frame_start = 1,
+	middle = "",
 })
 ```
 

@@ -18,6 +18,21 @@ local function create_element_string(element, values)
 	return string.format(element[1], unpack(new_values))
 end
 
+local function modify_element_string(old, values)
+	local e = string.match(old, "^(.-)%[[^[]*%]$")
+	local element = formspec_elements[e]
+	if type(element) ~= "table" then
+		return old  -- No-op for special elements, as there is no format string
+	end
+	local old_values = {string.match(old, element[5])}
+	local new_values = {}
+	for i,name in ipairs(element[2]) do
+		local value = element[4][i](values[name], old_values[i] or element[3][i])
+		table.insert(new_values, value)
+	end
+	return string.format(element[1], unpack(new_values))
+end
+
 local function check_old_command(msg)
 	local cmd = msg.command
 	if cmd == "lock" then
@@ -55,11 +70,7 @@ local function process_command(meta, data, msg)
 		local index = tonumber(msg.index)
 		if element and index and index > 0 then
 			local str = create_element_string(element, msg)
-			if index > #data then
-				table.insert(data, str)
-			else
-				table.insert(data, index, str)
-			end
+			table.insert(data, index, str)
 		end
 
 	elseif cmd == "replace" then
@@ -70,10 +81,23 @@ local function process_command(meta, data, msg)
 			data[index] = str
 		end
 
+	elseif cmd == "modify" then
+		local index = tonumber(msg.index)
+		if index and data[index] then
+			local str = modify_element_string(data[index], msg)
+			data[index] = str
+		end
+
 	elseif cmd == "remove" then
 		local index = tonumber(msg.index)
 		if index and data[index] then
 			table.remove(data, index)
+		end
+
+	elseif cmd == "delete" then
+		local index = tonumber(msg.index)
+		if index and data[index] then
+			data[index] = nil
 		end
 
 	elseif cmd == "set" then
@@ -106,7 +130,10 @@ local function process_command(meta, data, msg)
 end
 
 local function get_data(meta)
-	local data = minetest.deserialize(meta:get("data"))
+    local data_s = meta:get("data")
+    if data_s == nil then return nil end
+
+	local data = minetest.deserialize(data_s)
 	if data and type(data[1]) == "table" then
 		-- Old data, convert to new format
 		for i,v in ipairs(data) do
@@ -129,14 +156,25 @@ local function create_formspec(meta, data)
 	if meta:get_int("no_prepend") == 1 then
 		fs = fs.."no_prepend[]"
 	end
-	if not meta:get("real_coordinates") and not meta:get("realcoordinates") then
+	if (meta:get("real_coordinates") or meta:get("realcoordinates")) ~= "1" then
 		fs = fs.."real_coordinates[false]"
 	end
 	local focus = meta:get("focus")
 	if focus then
 		fs = fs.."set_focus["..focus.."]"
 	end
-	return fs..table.concat(data)
+	local data_size = 0
+	for i in pairs(data) do
+		if i > data_size then
+			data_size = i
+		end
+	end
+	for i=1, data_size do
+		if data[i] then
+			fs = fs..data[i]
+		end
+	end
+	return fs
 end
 
 local function update_formspec(pos, meta, data)
@@ -192,7 +230,8 @@ end
 
 minetest.register_node("digilines:touchscreen", {
 	description = "Digilines Touchscreen",
-	groups = {cracky = 3},
+	groups = {cracky = 3, not_blocking_trains = 1},
+	is_ground_content = false,
 	tiles = {
 		"digistuff_panel_back.png",
 		"digistuff_panel_back.png",

@@ -14,10 +14,13 @@ local function fs_escape(text, is_list)
 end
 
 local function num(value, default_value)
+	if type(value) == "string" then
+		value = tonumber(value)
+	end
 	if type(value) ~= "number" then
 		return default_value
 	end
-	return string.format("%.4g", value)
+	return string.format("%s", math.floor(value * 1000) / 1000)
 end
 
 local function str(value, default_value)
@@ -28,6 +31,9 @@ local function str(value, default_value)
 end
 
 local function bool(value, default_value)
+	if value == "true" or value == "false" then
+		return value
+	end
 	if type(value) ~= "boolean" then
 		return default_value
 	end
@@ -89,9 +95,9 @@ local function prop(value, default_value)  -- Only for `stlye` and `style_type`
 			if type(v) == "string" then
 				table.insert(new_prop, k..fs_escape(v, true))
 			elseif type(v) == "number" then
-				table.insert(new_prop, k..string.format("%.4g", v))
+				table.insert(new_prop, k..num(v))
 			elseif type(v) == "boolean" then
-				table.insert(new_prop, k..(v and "true" or "false"))
+				table.insert(new_prop, k..bool(v))
 			end
 		end
 	end
@@ -113,16 +119,16 @@ local formspec_elements = {
 		{num, num, num, num, str, str, str},
 	},
 	image = {
-		"image[%s,%s;%s,%s;%s]",
-		{"X", "Y", "W", "H", "image"},
-		{"0", "0", "1", "1", "ui_blank_image.png"},
-		{num, num, num, num, str}
+		"image[%s,%s;%s,%s;%s;%s]",
+		{"X", "Y", "W", "H", "image", "middle"},
+		{"0", "0", "1", "1", "ui_blank_image.png", ""},
+		{num, num, num, num, str, middle}
 	},
 	animated_image = {
-		"animated_image[%s,%s;%s,%s;%s;%s;%s;%s;%s]",
-		{"X", "Y", "W", "H", "name", "image", "frame_count", "frame_duration", "frame_start"},
-		{"0", "0", "1", "1", "animated_image", "ui_blank_image.png", "16", "200", "1"},
-		{num, num, num, num, str, str, num, num, num}
+		"animated_image[%s,%s;%s,%s;%s;%s;%s;%s;%s;%s]",
+		{"X", "Y", "W", "H", "name", "image", "frame_count", "frame_duration", "frame_start", "middle"},
+		{"0", "0", "1", "1", "animated_image", "ui_blank_image.png", "16", "200", "1", ""},
+		{num, num, num, num, str, str, num, num, num, middle}
 	},
 	model = {
 		"model[%s,%s;%s,%s;%s;%s;%s;%s,%s;%s;%s;%s,%s;%s]",
@@ -133,7 +139,7 @@ local formspec_elements = {
 	item_image = {
 		"item_image[%s,%s;%s,%s;%s]",
 		{"X", "Y", "W", "H", "item_name"},
-		{"0", "0", "1", "1", "ui_blank_image.png"},
+		{"0", "0", "1", "1", "default:dirt"},
 		{num, num, num, num, str}
 	},
 	bgcolor = {
@@ -205,7 +211,7 @@ local formspec_elements = {
 	image_button = {
 		"image_button[%s,%s;%s,%s;%s;%s;%s;%s;%s;%s]",
 		{"X", "Y", "W", "H", "image", "name", "label", "noclip", "drawborder", "pressed_image"},
-		{"0", "0", "1", "1", "default_stone_block.png", "image_button", "button", "", "", ""},
+		{"0", "0", "1", "1", "ui_blank_image.png", "image_button", "button", "", "", ""},
 		{num, num, num, num, str, str, str, bool, bool, str}
 	},
 	item_image_button = {
@@ -223,7 +229,7 @@ local formspec_elements = {
 	image_button_exit = {
 		"image_button_exit[%s,%s;%s,%s;%s;%s;%s]",
 		{"X", "Y", "W", "H", "image", "name", "label"},
-		{"0", "0", "1", "1", "default_mese_block.png", "image_button_exit", "button"},
+		{"0", "0", "1", "1", "ui_blank_image.png", "image_button_exit", "button"},
 		{num, num, num, num, str, str, str}
 	},
 	textlist = {
@@ -269,6 +275,15 @@ local formspec_elements = {
 		{list, prop}
 	},
 }
+
+-- Create un-format strings for modifying elements
+for _,element in pairs(formspec_elements) do
+	local s = string.gsub(element[1], "%%s", "(.*)")
+	s = string.gsub(s, "%[", "%%[")
+	s = string.gsub(s, "%]", "%%]")
+	element[5] = "^"..s.."$"
+end
+
 
 local table_options = {
 	color = str,
